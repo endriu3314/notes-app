@@ -6,6 +6,7 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.10.1"
+spotless = "6.25.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -17,4 +18,5 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
