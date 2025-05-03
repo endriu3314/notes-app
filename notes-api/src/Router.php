@@ -2,6 +2,7 @@
 
 namespace NotesApi;
 
+use NotesApi\Request\DumpRequestToFile;
 use NotesApi\Request\Request;
 use NotesApi\Request\ResponseBuilder;
 
@@ -82,6 +83,9 @@ class Router
         }
 
         $request = new Request;
+
+        $dumpRequestToFile = new DumpRequestToFile;
+        $dumpRequestToFile->execute($request);
 
         foreach ($this->routes[$method] as $route => $data) {
             $pattern = $this->convertToPattern($route);
