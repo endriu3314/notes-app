@@ -35,10 +35,12 @@ class AuthController
 
     public function register(Request $request)
     {
-        ['email' => $email, 'password' => $password, 'name' => $name] = $request->only(['email', 'password', 'name']);
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $name = $request->input('name');
 
         if (! $email || ! $password || ! $name) {
-            return ResponseBuilder::buildJsonResponse(['error' => 'Email, password and name are required'], 400);
+            return ResponseBuilder::buildJsonResponse(['error' => 'Email, password and name are required'], 422);
         }
 
         $email = InputSanitizer::sanitize($email);
@@ -47,7 +49,7 @@ class AuthController
 
         $user = $this->userRepository->findByEmail($email);
         if ($user) {
-            return ResponseBuilder::buildJsonResponse(['error' => 'User already exists'], 400);
+            return ResponseBuilder::buildJsonResponse(['error' => 'User already exists'], 422);
         }
 
         $this->userRepository->create($email, password_hash($password, PASSWORD_DEFAULT), $name);
@@ -57,10 +59,11 @@ class AuthController
 
     public function login(Request $request)
     {
-        ['email' => $email, 'password' => $password] = $request->only(['email', 'password']);
+        $email = $request->input('email');
+        $password = $request->input('password');
 
         if (! $email || ! $password) {
-            return ResponseBuilder::buildJsonResponse(['error' => 'Email and password are required'], 400);
+            return ResponseBuilder::buildJsonResponse(['error' => 'Email and password are required'], 422);
         }
 
         $email = InputSanitizer::sanitize($email);
