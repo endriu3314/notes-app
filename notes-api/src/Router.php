@@ -41,27 +41,27 @@ class Router
         $this->middleware[] = $middleware;
     }
 
-    public function get(string $path, callable $handler): void
+    public function get(string $path, mixed $handler): void
     {
         $this->addRoute('GET', $path, $handler);
     }
 
-    public function post(string $path, callable $handler): void
+    public function post(string $path, mixed $handler): void
     {
         $this->addRoute('POST', $path, $handler);
     }
 
-    public function put(string $path, callable $handler): void
+    public function put(string $path, mixed $handler): void
     {
         $this->addRoute('PUT', $path, $handler);
     }
 
-    public function delete(string $path, callable $handler): void
+    public function delete(string $path, mixed $handler): void
     {
         $this->addRoute('DELETE', $path, $handler);
     }
 
-    private function addRoute(string $method, string $path, callable $handler): void
+    private function addRoute(string $method, string $path, mixed $handler): void
     {
         $fullPath = $this->prefix.$path;
         $this->routes[$method][$fullPath] = [
@@ -90,8 +90,23 @@ class Router
                     }
                 }
 
+                if (is_array($data['handler'])) {
+                    $controller = new $data['handler'][0];
+                    $method = $data['handler'][1];
+
+                    if (is_callable([$controller, $method])) {
+                        return call_user_func_array([$controller, $method], [
+                            new Request,
+                            ...$params,
+                        ]);
+                    }
+                }
+
                 if (is_callable($data['handler'])) {
-                    return call_user_func_array($data['handler'], $params);
+                    return call_user_func_array($data['handler'], [
+                        new Request,
+                        ...$params,
+                    ]);
                 }
             }
         }
