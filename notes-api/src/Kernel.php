@@ -2,6 +2,8 @@
 
 namespace NotesApi;
 
+use NotesApi\Config\EnvLoader;
+
 class Kernel
 {
     public readonly Router $router;
@@ -12,6 +14,8 @@ class Kernel
     {
         $this->router = new Router;
         $this->routesFile = __DIR__.'/../routes/routes.php';
+
+        EnvLoader::load(__DIR__.'/../.env');
     }
 
     public function handle(): void
