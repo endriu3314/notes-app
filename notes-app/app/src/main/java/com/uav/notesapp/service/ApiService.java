@@ -5,7 +5,6 @@ import com.uav.notesapp.model.requests.auth.RegisterRequest;
 import com.uav.notesapp.model.response.MeResponse;
 import com.uav.notesapp.model.response.auth.LoginResponse;
 import com.uav.notesapp.model.response.auth.RegisterResponse;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

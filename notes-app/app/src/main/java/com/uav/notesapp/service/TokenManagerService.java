@@ -2,7 +2,6 @@ package com.uav.notesapp.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import androidx.annotation.NonNull;
 
 public class TokenManagerService {
@@ -12,7 +11,9 @@ public class TokenManagerService {
     private SharedPreferences sharedPreferences;
 
     public TokenManagerService(@NonNull Context context) {
-        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences =
+                context.getApplicationContext()
+                        .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public void saveToken(String token) {

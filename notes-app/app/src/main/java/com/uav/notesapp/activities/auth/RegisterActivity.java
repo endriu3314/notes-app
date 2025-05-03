@@ -8,10 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -20,9 +18,7 @@ import com.uav.notesapp.R;
 import com.uav.notesapp.model.requests.auth.RegisterRequest;
 import com.uav.notesapp.model.response.auth.RegisterResponse;
 import com.uav.notesapp.service.ApiService;
-
 import java.io.IOException;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,41 +61,59 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         RegisterRequest registerRequest = new RegisterRequest(name, email, password);
-        apiService.register(registerRequest).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
-                if (!response.isSuccessful() || response.body() == null) {
-                    String errorMessage = "Register failed";
+        apiService
+                .register(registerRequest)
+                .enqueue(
+                        new Callback<>() {
+                            @Override
+                            public void onResponse(
+                                    @NonNull Call<RegisterResponse> call,
+                                    @NonNull Response<RegisterResponse> response) {
+                                if (!response.isSuccessful() || response.body() == null) {
+                                    String errorMessage = "Register failed";
 
-                    try (ResponseBody errorBody = response.errorBody()) {
-                        if (errorBody == null) {
-                            return;
-                        }
+                                    try (ResponseBody errorBody = response.errorBody()) {
+                                        if (errorBody == null) {
+                                            return;
+                                        }
 
-                        String bodyContent = errorBody.string();
-                        updateErrorMessage(bodyContent);
-                        errorMessage += ": " + bodyContent;
-                    } catch (IOException e) {
-                        Log.e(TAG, "Failed to parse error body", e);
-                    }
+                                        String bodyContent = errorBody.string();
+                                        updateErrorMessage(bodyContent);
+                                        errorMessage += ": " + bodyContent;
+                                    } catch (IOException e) {
+                                        Log.e(TAG, "Failed to parse error body", e);
+                                    }
 
-                    Log.e(TAG, errorMessage);
-                    return;
-                }
+                                    Log.e(TAG, errorMessage);
+                                    return;
+                                }
 
-                Log.i(TAG, "Register successful:" + response.body().getMessage());
-                Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "Register successful:" + response.body().getMessage());
+                                Toast.makeText(
+                                                RegisterActivity.this,
+                                                response.body().getMessage(),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
 
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(i);
-            }
+                                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(i);
+                            }
 
-            @Override
-            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable throwable) {
-                Log.e(TAG, "Login network error: " + throwable.getMessage(), throwable);
-                Toast.makeText(RegisterActivity.this, "Network error" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                            @Override
+                            public void onFailure(
+                                    @NonNull Call<RegisterResponse> call,
+                                    @NonNull Throwable throwable) {
+                                Log.e(
+                                        TAG,
+                                        "Login network error: " + throwable.getMessage(),
+                                        throwable);
+                                Toast.makeText(
+                                                RegisterActivity.this,
+                                                "Network error" + throwable.getMessage(),
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        });
     }
 
     private void clearErrorMessage() {
@@ -112,7 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
             Gson gson = new Gson();
             JsonObject errorJson = gson.fromJson(errorBody, JsonObject.class);
 
-            if (errorJson != null && errorJson.has("error") && !errorJson.get("error").isJsonNull()) {
+            if (errorJson != null
+                    && errorJson.has("error")
+                    && !errorJson.get("error").isJsonNull()) {
                 errorView.setText(errorJson.get("error").getAsString());
                 errorView.setVisibility(View.VISIBLE);
             }
