@@ -20,6 +20,19 @@ class AuthController
         $this->accessTokenRepository = new AccessTokenRepository;
     }
 
+    public function me(Request $request)
+    {
+        // this should be handled by the middleware
+        if (! $request->user()) {
+            return ResponseBuilder::buildJsonResponse(['error' => 'Unauthorized'], 401);
+        }
+
+        return ResponseBuilder::buildJsonResponse([
+            'message' => 'User authenticated',
+            'user' => $request->user(),
+        ]);
+    }
+
     public function register(Request $request)
     {
         ['email' => $email, 'password' => $password, 'name' => $name] = $request->only(['email', 'password', 'name']);

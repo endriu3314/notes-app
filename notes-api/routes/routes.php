@@ -20,6 +20,12 @@ $router->group('/api', function (Router $router) {
         $router->post('/register', [AuthController::class, 'register']);
         $router->post('/login', [AuthController::class, 'login']);
     });
+
+    $router->group('/auth', function (Router $router) {
+        $router->middleware(new ApiAuthMiddleware);
+
+        $router->get('/me', [AuthController::class, 'me']);
+    });
 });
 
 $router->group('/app', function (Router $router) {
