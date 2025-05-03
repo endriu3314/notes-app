@@ -1,4 +1,4 @@
-name: PHP Composer
+name: PHP
 
 on:
   push:
@@ -11,8 +11,10 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./notes-api
 
     steps:
     - uses: actions/checkout@v4
