@@ -7,10 +7,14 @@ plugins {
 apply plugin: 'com.diffplug.spotless'
 
 spotless {
-    java { // Add this block if you use Java
-        googleJavaFormat() // Recommended for Android
+    java {
         target '**/*.java'
         targetExclude '**/build/**/*.java'
-        lineEndings 'UNIX'
+
+        googleJavaFormat()
+            .aosp()
+            .reflowLongStrings()
+        removeUnusedImports()
+        endWithNewline()
     }
 }
