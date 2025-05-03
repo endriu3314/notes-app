@@ -2,7 +2,7 @@
 
 namespace NotesApi\Middleware;
 
-use NotesApi\ResponseBuilder;
+use NotesApi\Request\ResponseBuilder;
 
 class AuthMiddleware
 {
