@@ -81,6 +81,8 @@ class Router
             return $this->notFound();
         }
 
+        $request = new Request;
+
         foreach ($this->routes[$method] as $route => $data) {
             $pattern = $this->convertToPattern($route);
 
@@ -89,7 +91,7 @@ class Router
 
                 foreach ($data['middleware'] as $middleware) {
                     if (is_callable($middleware)) {
-                        $middleware();
+                        $middleware($request);
                     }
                 }
 
@@ -99,7 +101,7 @@ class Router
 
                     if (is_callable([$controller, $method])) {
                         return call_user_func_array([$controller, $method], [
-                            new Request,
+                            $request,
                             ...$params,
                         ]);
                     }
@@ -107,7 +109,7 @@ class Router
 
                 if (is_callable($data['handler'])) {
                     return call_user_func_array($data['handler'], [
-                        new Request,
+                        $request,
                         ...$params,
                     ]);
                 }
