@@ -18,6 +18,8 @@ class Request
 
     private array $headers;
 
+    private ?array $json = null;
+
     public ?User $user = null;
 
     public function __construct()
@@ -28,6 +30,27 @@ class Request
         $this->files = $_FILES;
         $this->cookies = $_COOKIE;
         $this->headers = getallheaders();
+
+        if ($this->isJson()) {
+            $rawInput = file_get_contents('php://input');
+            $this->json = json_decode($rawInput, true) ?? [];
+        }
+    }
+
+    private function isJson(): bool
+    {
+        $contentType = $this->header('Content-Type');
+
+        return $contentType && strpos($contentType, 'application/json') !== false;
+    }
+
+    public function json(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->json ?? [];
+        }
+
+        return $this->json[$key] ?? $default;
     }
 
     public function post(?string $key = null, $default = null)
@@ -84,6 +107,11 @@ class Request
         return $this->headers[$key] ?? $default;
     }
 
+    public function headers(): array
+    {
+        return $this->headers;
+    }
+
     public function method(): string
     {
         return $this->server('REQUEST_METHOD', 'GET');
@@ -106,7 +134,25 @@ class Request
 
     public function all(): array
     {
-        return array_merge($this->get(), $this->post());
+        return array_merge($this->get(), $this->post(), $this->json());
+    }
+
+    public function input(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return array_merge($this->post(), $this->json());
+        }
+
+        return $this->post($key) ?? $this->json($key) ?? $default;
+    }
+
+    public function any(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->all();
+        }
+
+        return $this->get($key) ?? $this->post($key) ?? $this->json($key) ?? $default;
     }
 
     public function only(array $keys): array
