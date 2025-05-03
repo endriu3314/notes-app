@@ -82,4 +82,11 @@ class AccessTokenRepository
             $id,
         ]);
     }
+
+    public function updateLastUsedAt(int $id): void
+    {
+        $this->db->query('UPDATE access_tokens SET last_used_at = NOW() WHERE id = ?', [
+            $id,
+        ]);
+    }
 }

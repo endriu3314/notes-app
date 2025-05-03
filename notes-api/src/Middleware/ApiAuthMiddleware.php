@@ -48,6 +48,8 @@ class ApiAuthMiddleware
             exit;
         }
 
+        $this->accessTokenRepository->updateLastUsedAt($accessToken->id);
+
         $request->setUser($user);
     }
 }
