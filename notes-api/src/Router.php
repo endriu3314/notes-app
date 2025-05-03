@@ -2,6 +2,9 @@
 
 namespace NotesApi;
 
+use NotesApi\Request\Request;
+use NotesApi\Request\ResponseBuilder;
+
 class Router
 {
     private array $routes = [];

@@ -1,6 +1,6 @@
 <?php
 
-namespace NotesApi;
+namespace NotesApi\Request;
 
 class InputSanitizer
 {
