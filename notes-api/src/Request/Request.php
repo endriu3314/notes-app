@@ -2,6 +2,8 @@
 
 namespace NotesApi\Request;
 
+use NotesApi\Dto\User;
+
 class Request
 {
     private array $post;
@@ -15,6 +17,8 @@ class Request
     private array $cookies;
 
     private array $headers;
+
+    public ?User $user = null;
 
     public function __construct()
     {
@@ -115,5 +119,15 @@ class Request
     public function hasFile(string $key): bool
     {
         return isset($this->files[$key]) && $this->files[$key]['error'] === UPLOAD_ERR_OK;
+    }
+
+    public function user(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 }
