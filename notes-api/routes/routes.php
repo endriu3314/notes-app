@@ -1,9 +1,11 @@
 <?php
 
+use NotesApi\Controllers\Api\AuthController;
+use NotesApi\Middleware\ApiAuthMiddleware;
 use NotesApi\Middleware\ApiMiddleware;
 use NotesApi\Middleware\AuthMiddleware;
 use NotesApi\Middleware\CorsMiddleware;
-use NotesApi\ResponseBuilder;
+use NotesApi\Request\ResponseBuilder;
 use NotesApi\Router;
 use NotesApi\TemplateRenderer;
 
@@ -14,12 +16,15 @@ $router->middleware(new CorsMiddleware);
 $router->group('/api', function (Router $router) {
     $router->middleware(new ApiMiddleware);
 
-    $router->get('/notes', function () {
-        return ResponseBuilder::buildJsonResponse(['notes' => ['Note 1', 'Note 2']]);
+    $router->group('/auth', function (Router $router) {
+        $router->post('/register', [AuthController::class, 'register']);
+        $router->post('/login', [AuthController::class, 'login']);
     });
 
-    $router->get('/notes/{id}', function ($id) {
-        return ResponseBuilder::buildJsonResponse(['note' => "Note with ID: $id"]);
+    $router->group('/auth', function (Router $router) {
+        $router->middleware(new ApiAuthMiddleware);
+
+        $router->get('/me', [AuthController::class, 'me']);
     });
 });
 
