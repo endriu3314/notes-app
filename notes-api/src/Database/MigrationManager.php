@@ -6,13 +6,16 @@ use NotesApi\Config\Database;
 
 class MigrationManager
 {
-    private Database $db;
+    private readonly Database $db;
+
+    private readonly MigrationsRegistrar $registrar;
 
     private string $migrationsTable = 'migrations';
 
-    public function __construct()
+    public function __construct(MigrationsRegistrar $registrar)
     {
         $this->db = Database::getInstance();
+        $this->registrar = $registrar;
         $this->createMigrationsTable();
     }
 
@@ -28,16 +31,26 @@ class MigrationManager
         $this->db->query($sql);
     }
 
-    public function runMigrations(array $migrations): void
+    public function runMigrations(): void
     {
         $batch = $this->getNextBatchNumber();
 
-        foreach ($migrations as $migration) {
-            $migrationName = get_class($migration);
-            if (! $this->isMigrated($migrationName)) {
+        foreach ($this->registrar->getMigrations() as $identifier => $migration) {
+            if (! $this->isMigrated($identifier)) {
                 $this->runMigration($migration, $batch);
             }
         }
+    }
+
+    private function runMigration(Migration $migration, int $batch): void
+    {
+        echo 'Running migration: '.$migration->getIdentifier()."\n";
+
+        $migration->up();
+
+        $migrationIdentifier = $migration->getIdentifier();
+        $sql = "INSERT INTO {$this->migrationsTable} (migration, batch) VALUES (?, ?)";
+        $this->db->query($sql, [$migrationIdentifier, $batch]);
     }
 
     public function rollbackMigrations(): void
@@ -50,34 +63,21 @@ class MigrationManager
         }
     }
 
-    private function runMigration(Migration $migration, int $batch): void
+    private function rollbackMigration(string $migrationIdentifier): void
     {
-        echo 'Running migration: '.$migration::class."\n";
+        echo "Rolling back migration: {$migrationIdentifier}\n";
 
-        $migration->up();
-
-        $migrationName = get_class($migration);
-        $sql = "INSERT INTO {$this->migrationsTable} (migration, batch) VALUES (?, ?)";
-        $this->db->query($sql, [$migrationName, $batch]);
-    }
-
-    private function rollbackMigration(string $migrationName): void
-    {
-        echo "Rolling back migration: {$migrationName}\n";
-
-        $migration = new $migrationName;
-        if ($migration instanceof Migration) {
-            $migration->down();
-        }
+        $migration = $this->registrar->getMigration($migrationIdentifier);
+        $migration->down();
 
         $sql = "DELETE FROM {$this->migrationsTable} WHERE migration = ?";
-        $this->db->query($sql, [$migrationName]);
+        $this->db->query($sql, [$migrationIdentifier]);
     }
 
-    private function isMigrated(string $migrationName): bool
+    private function isMigrated(string $migrationIdentifier): bool
     {
         $sql = "SELECT COUNT(*) as count FROM {$this->migrationsTable} WHERE migration = ?";
-        $result = $this->db->query($sql, [$migrationName])->fetch();
+        $result = $this->db->query($sql, [$migrationIdentifier])->fetch();
 
         return $result['count'] > 0;
     }

@@ -46,4 +46,11 @@ abstract class Migration
     {
         return $this->execute("ALTER TABLE {$tableName} DROP COLUMN {$columnName}");
     }
+
+    public function getIdentifier(): string
+    {
+        $className = basename(str_replace('\\', '/', get_class($this)));
+
+        return preg_replace('/.php:\d+\$\d+$/', '', $className);
+    }
 }
