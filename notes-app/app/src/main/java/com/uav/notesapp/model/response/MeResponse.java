@@ -3,6 +3,7 @@ package com.uav.notesapp.model.response;
 import com.uav.notesapp.model.User;
 
 public class MeResponse {
+
     private String message;
     private User user;
 

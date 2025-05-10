@@ -1,9 +1,11 @@
 package com.uav.notesapp.model;
 
 import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+
     private int id;
     private String email;
     private String name;
@@ -37,21 +39,6 @@ public class User {
     @NonNull
     @Override
     public String toString() {
-        return "User{"
-                + "id="
-                + id
-                + ", email='"
-                + email
-                + '\''
-                + ", name='"
-                + name
-                + '\''
-                + ", createdAt='"
-                + createdAt
-                + '\''
-                + ", updatedAt='"
-                + updatedAt
-                + '\''
-                + '}';
+        return ("User{" + "id=" + id + ", email='" + email + '\'' + ", name='" + name + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}');
     }
 }

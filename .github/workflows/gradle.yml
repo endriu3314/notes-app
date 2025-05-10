@@ -2,9 +2,9 @@ name: Android
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 17
-          distribution: 'temurin'
+          distribution: "temurin"
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -34,7 +34,4 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run Spotless Check
-        run: ./gradlew spotlessCheck
-        
-
-      
+        run: ./gradlew check

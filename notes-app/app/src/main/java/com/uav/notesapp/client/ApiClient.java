@@ -2,18 +2,21 @@ package com.uav.notesapp.client;
 
 import com.uav.notesapp.service.ApiService;
 import com.uav.notesapp.service.TokenManagerService;
+
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://192.168.68.66/api/";
+
+    private static final String BASE_URL = "http://192.168.1.3/api/";
 
     private Retrofit retrofit = null;
     private ApiService apiService = null;
-    private TokenManagerService tokenManagerService;
+    private final TokenManagerService tokenManagerService;
 
     public ApiClient(TokenManagerService tokenManager) {
         tokenManagerService = tokenManager;
@@ -36,12 +39,11 @@ public class ApiClient {
         httpClient.connectTimeout(30, TimeUnit.SECONDS);
         httpClient.readTimeout(30, TimeUnit.SECONDS);
 
-        retrofit =
-                new Retrofit.Builder()
-                        .baseUrl(BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(httpClient.build())
-                        .build();
+        retrofit = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient.build())
+            .build();
 
         apiService = retrofit.create(ApiService.class);
     }

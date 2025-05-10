@@ -3,6 +3,7 @@ package com.uav.notesapp.model.response.auth;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
+
     private String message;
     private String token;
 
