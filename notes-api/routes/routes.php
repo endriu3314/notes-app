@@ -1,6 +1,7 @@
 <?php
 
 use NotesApi\Controllers\Api\AuthController;
+use NotesApi\Controllers\Api\NotesController;
 use NotesApi\Middleware\ApiAuthMiddleware;
 use NotesApi\Middleware\ApiMiddleware;
 use NotesApi\Middleware\AuthMiddleware;
@@ -25,6 +26,19 @@ $router->group('/api', function (Router $router) {
         $router->middleware(new ApiAuthMiddleware);
 
         $router->get('/me', [AuthController::class, 'me']);
+    });
+
+    $router->group('/notes', function (Router $router) {
+        $router->middleware(new ApiAuthMiddleware);
+
+        $router->get('', [NotesController::class, 'index']);
+        $router->get('/{id}', [NotesController::class, 'show']);
+        $router->post('', [NotesController::class, 'create']);
+        $router->put('/{id}', [NotesController::class, 'update']);
+        $router->delete('/{id}', [NotesController::class, 'destroy']);
+
+        $router->post('/{id}/authorize', [NotesController::class, 'authorize']);
+        $router->delete('/{id}/authorize/{userId}', [NotesController::class, 'unauthorize']);
     });
 });
 

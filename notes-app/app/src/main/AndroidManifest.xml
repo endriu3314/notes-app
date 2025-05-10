@@ -18,6 +18,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.notes.ViewNoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.notes.IndexNoteActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.auth.RegisterActivity"
             android:exported="false" />
         <activity
