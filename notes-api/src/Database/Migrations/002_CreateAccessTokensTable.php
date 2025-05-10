@@ -4,22 +4,24 @@ namespace NotesApi\Database\Migrations;
 
 use NotesApi\Database\Migration;
 
-class CreateUsersTable extends Migration
+return new class extends Migration
 {
     public function up()
     {
-        $this->createTable('users', [
+        $this->createTable('access_tokens', [
             'id INT AUTO_INCREMENT PRIMARY KEY',
-            'name VARCHAR(255) NOT NULL',
-            'email VARCHAR(255) NOT NULL UNIQUE',
-            'password VARCHAR(255) NOT NULL',
+            'user_id INT NOT NULL',
+            'token VARCHAR(255) NOT NULL UNIQUE',
+            'expires_at TIMESTAMP NULL',
+            'last_used_at TIMESTAMP NULL',
             'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
             'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+            'FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE',
         ]);
     }
 
     public function down()
     {
-        $this->dropTable('users');
+        $this->dropTable('access_tokens');
     }
-}
+};
