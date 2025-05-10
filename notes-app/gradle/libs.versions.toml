@@ -10,7 +10,6 @@ retrofit = "2.11.0"
 converterGson = "2.11.0"
 loggingInterceptor = "5.0.0-alpha.14"
 constraintlayout = "2.2.1"
-spotless = "6.25.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -26,5 +25,4 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 

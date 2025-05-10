@@ -1,14 +1,18 @@
 package com.uav.notesapp.client;
 
 import androidx.annotation.NonNull;
+
 import com.uav.notesapp.service.TokenManagerService;
+
 import java.io.IOException;
+
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class AuthInterceptor implements Interceptor {
-    private TokenManagerService tokenManagerService;
+
+    private final TokenManagerService tokenManagerService;
 
     public AuthInterceptor(TokenManagerService tokenManger) {
         tokenManagerService = tokenManger;
@@ -24,7 +28,6 @@ public class AuthInterceptor implements Interceptor {
             return chain.proceed(originalRequest);
         }
 
-        return chain.proceed(
-                originalRequest.newBuilder().header("Authorization", "Bearer " + token).build());
+        return chain.proceed(originalRequest.newBuilder().header("Authorization", "Bearer " + token).build());
     }
 }

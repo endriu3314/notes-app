@@ -1,9 +1,10 @@
 package com.uav.notesapp.model.requests.auth;
 
 public class RegisterRequest {
-    private String name;
-    private String email;
-    private String password;
+
+    private final String name;
+    private final String email;
+    private final String password;
 
     public RegisterRequest(String name, String email, String password) {
         this.name = name;

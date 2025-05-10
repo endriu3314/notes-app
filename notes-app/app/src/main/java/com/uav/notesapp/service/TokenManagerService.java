@@ -2,18 +2,18 @@ package com.uav.notesapp.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 
 public class TokenManagerService {
+
     private static final String PREFS_NAME = "NotesAppPrefs";
     private static final String AUTH_TOKEN_KEY = "authToken";
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public TokenManagerService(@NonNull Context context) {
-        sharedPreferences =
-                context.getApplicationContext()
-                        .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public void saveToken(String token) {
