@@ -80,7 +80,7 @@ class AuthController
         }
 
         $token = bin2hex(random_bytes(32));
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 day'));
 
         $accessToken = $this->accessTokenRepository->create($user->id, hash('sha256', $token), $expiresAt);
 
