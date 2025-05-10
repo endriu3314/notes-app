@@ -10,6 +10,8 @@ class Request
 
     private array $get;
 
+    private ?array $put = [];
+
     private array $server;
 
     private array $files;
@@ -18,7 +20,7 @@ class Request
 
     private array $headers;
 
-    private ?array $json = null;
+    private ?array $json = [];
 
     public ?User $user = null;
 
@@ -35,6 +37,10 @@ class Request
             $rawInput = file_get_contents('php://input');
             $this->json = json_decode($rawInput, true) ?? [];
         }
+
+        if ($this->isPut()) {
+            $this->parsePut();
+        }
     }
 
     private function isJson(): bool
@@ -44,10 +50,28 @@ class Request
         return $contentType && strpos($contentType, 'application/json') !== false;
     }
 
+    private function parsePut(): void
+    {
+        $contentType = $this->header('Content-Type');
+
+        $rawData = file_get_contents('php://input');
+        $data = [];
+
+        if ($contentType && strpos($contentType, 'application/x-www-form-urlencoded') !== false) {
+            parse_str($rawData, $data);
+        } elseif ($contentType && strpos($contentType, 'application/json') !== false) {
+            $data = json_decode($rawData, true) ?? [];
+        } else {
+            throw new \Exception('Unsupported content type');
+        }
+
+        $this->put = $data;
+    }
+
     public function json(?string $key = null, $default = null)
     {
         if ($key === null) {
-            return $this->json ?? [];
+            return $this->json;
         }
 
         return $this->json[$key] ?? $default;
@@ -69,6 +93,15 @@ class Request
         }
 
         return $this->get[$key] ?? $default;
+    }
+
+    public function put(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->put;
+        }
+
+        return $this->put[$key] ?? $default;
     }
 
     public function server(?string $key = null, $default = null)
@@ -132,18 +165,23 @@ class Request
         return $this->method() === 'GET';
     }
 
+    public function isPut(): bool
+    {
+        return $this->method() === 'PUT';
+    }
+
     public function all(): array
     {
-        return array_merge($this->get(), $this->post(), $this->json());
+        return array_merge($this->get(), $this->post(), $this->json(), $this->put());
     }
 
     public function input(?string $key = null, $default = null)
     {
         if ($key === null) {
-            return array_merge($this->post(), $this->json());
+            return array_merge($this->post(), $this->json(), $this->put());
         }
 
-        return $this->post($key) ?? $this->json($key) ?? $default;
+        return $this->post($key) ?? $this->json($key) ?? $this->put($key) ?? $default;
     }
 
     public function any(?string $key = null, $default = null)
@@ -152,7 +190,7 @@ class Request
             return $this->all();
         }
 
-        return $this->get($key) ?? $this->post($key) ?? $this->json($key) ?? $default;
+        return $this->get($key) ?? $this->post($key) ?? $this->json($key) ?? $this->put($key) ?? $default;
     }
 
     public function only(array $keys): array
