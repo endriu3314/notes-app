@@ -3,8 +3,9 @@
 namespace NotesApi\Request;
 
 use NotesApi\Dto\User;
+use NotesApi\Singleton;
 
-class Request
+class Request extends Singleton
 {
     private array $post;
 
@@ -26,7 +27,7 @@ class Request
 
     public ?User $user = null;
 
-    public function __construct()
+    protected function __construct()
     {
         $this->post = $_POST;
         $this->get = $_GET;
@@ -217,7 +218,7 @@ class Request
         $this->user = $user;
     }
 
-    public function redirect(string $url): void
+    public function redirect(string $url): never
     {
         if (! empty($this->flash)) {
             $_SESSION['_flash'] = $this->flash;
@@ -227,7 +228,7 @@ class Request
         exit;
     }
 
-    public function redirectBack(): void
+    public function redirectBack(): never
     {
         if (! empty($this->flash)) {
             $_SESSION['_flash'] = $this->flash;
