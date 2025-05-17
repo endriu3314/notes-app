@@ -82,7 +82,7 @@ class Router
             return $this->notFound();
         }
 
-        $request = new Request;
+        $request = Request::getInstance();
 
         $dumpRequestToFile = new DumpRequestToFile;
         $dumpRequestToFile->execute($request);
