@@ -145,6 +145,10 @@ public class ViewNoteActivity extends AppCompatActivity {
         note.getAuthorizedUsers().forEach(user -> {
             Button userButton = new Button(this);
 
+            if (note.getUser().getId() != Application.getAuthUser().getId()) {
+                userButton.setEnabled(false);
+            }
+
             userButton.setText(user.getName());
             userButton.setId(View.generateViewId());
             userButton.setOnClickListener(v -> unauthorizeUserToNote(user.getId()));
