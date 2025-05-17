@@ -42,7 +42,7 @@ public class NoteService {
             return;
         }
 
-        String errorMessage = "Authorization failed";
+        String errorMessage = "Req failed";
 
         try (ResponseBody errorBody = response.errorBody()) {
             if (errorBody == null) {
