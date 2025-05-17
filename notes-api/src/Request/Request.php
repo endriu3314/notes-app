@@ -22,6 +22,8 @@ class Request
 
     private ?array $json = [];
 
+    private array $flash = [];
+
     public ?User $user = null;
 
     public function __construct()
@@ -213,5 +215,47 @@ class Request
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    public function redirect(string $url): void
+    {
+        if (! empty($this->flash)) {
+            $_SESSION['_flash'] = $this->flash;
+        }
+
+        header('Location: '.$url);
+        exit;
+    }
+
+    public function redirectBack(): void
+    {
+        if (! empty($this->flash)) {
+            $_SESSION['_flash'] = $this->flash;
+        }
+
+        header('Location: '.$this->server('HTTP_REFERER', '/'));
+        exit;
+    }
+
+    public function with(string $key, $value): self
+    {
+        $this->flash[$key] = $value;
+
+        return $this;
+    }
+
+    public function withErrors(array $errors): self
+    {
+        $this->flash['errors'] = array_merge_recursive($this->flash['errors'] ?? [], $errors);
+
+        return $this;
+    }
+
+    public static function getFlash(string $key, $default = null)
+    {
+        $value = $_SESSION['_flash'][$key] ?? $default;
+        unset($_SESSION['_flash'][$key]);
+
+        return $value;
     }
 }
