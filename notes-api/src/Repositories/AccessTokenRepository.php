@@ -14,6 +14,43 @@ class AccessTokenRepository
         $this->db = Database::getInstance();
     }
 
+    public function findAll(int $userId, int $limit = 10, int $offset = 0): array
+    {
+        $sql = <<<'SQL'
+        SELECT id, user_id, expires_at, last_used_at, created_at, updated_at 
+        FROM access_tokens
+        WHERE user_id = ?
+        LIMIT ?
+        OFFSET ?
+        SQL;
+
+        $result = $this->db->query($sql, [$userId, $limit, $offset])->fetchAll();
+
+        return array_map(fn ($accessToken) => new AccessToken(
+            id: $accessToken['id'],
+            userId: $accessToken['user_id'],
+            expiresAt: $accessToken['expires_at'],
+            lastUsedAt: $accessToken['last_used_at'],
+            createdAt: $accessToken['created_at'],
+            updatedAt: $accessToken['updated_at'],
+        ), $result);
+    }
+
+    public function count(int $userId)
+    {
+        $sql = <<<'SQL'
+        SELECT COUNT(*) as total
+        FROM access_tokens
+        WHERE user_id = ?
+        SQL;
+
+        $params = [$userId];
+
+        $result = $this->db->query($sql, $params)->fetch();
+
+        return (int) $result['total'];
+    }
+
     public function findById(int $id): ?AccessToken
     {
         $result = $this->db->query('SELECT id, token, user_id, expires_at, last_used_at, created_at, updated_at FROM access_tokens WHERE id = ?', [
