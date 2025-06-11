@@ -14,7 +14,7 @@ use NotesApi\Request\ResponseBuilder;
 use NotesApi\Router;
 use NotesApi\TemplateRenderer;
 
-$router = $kernel->router;
+$router = $this;
 
 $router->middleware(new CorsMiddleware);
 

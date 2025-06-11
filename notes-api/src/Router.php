@@ -26,6 +26,16 @@ class Router
         ];
     }
 
+    public function loadRouteFile(string $file): void
+    {
+        require $file;
+    }
+
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
     public function group(string $prefix, callable $callback): void
     {
         $previousPrefix = $this->prefix;
@@ -74,15 +84,16 @@ class Router
         ];
     }
 
-    public function dispatch(string $method, string $uri): string
+    public function dispatch(Request $request): string
     {
-        $method = strtoupper($method);
+        $method = $request->method();
+        $uri = $request->uri();
 
         if (! isset($this->routes[$method])) {
             return $this->notFound();
         }
 
-        $request = Request::getInstance();
+        
 
         $dumpRequestToFile = new DumpRequestToFile;
         $dumpRequestToFile->execute($request);
