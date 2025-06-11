@@ -14,5 +14,7 @@ class User
         public readonly ?string $updatedAt,
         #[SensitiveParameter]
         public readonly string $password = '',
+        #[SensitiveParameter]
+        public readonly ?string $sessionToken = null,
     ) {}
 }

@@ -36,7 +36,7 @@ class UserRepository
 
     public function findById(int $id): ?User
     {
-        $result = $this->db->query('SELECT id, name, email, password, created_at, updated_at FROM users WHERE id = ?', [
+        $result = $this->db->query('SELECT id, name, email, password, session_token, created_at, updated_at FROM users WHERE id = ?', [
             $id,
         ])->fetch();
 
@@ -49,6 +49,7 @@ class UserRepository
             name: $result['name'],
             email: $result['email'],
             password: $result['password'],
+            sessionToken: $result['session_token'],
             createdAt: $result['created_at'],
             updatedAt: $result['updated_at'],
         );
@@ -68,5 +69,20 @@ class UserRepository
         }
 
         return $user;
+    }
+
+    public function updateSessionToken(int $userId, string $token): void
+    {
+        $this->db->query('UPDATE users SET session_token = ? WHERE id = ?', [
+            $token,
+            $userId,
+        ]);
+    }
+
+    public function clearSessionToken(int $userId): void
+    {
+        $this->db->query('UPDATE users SET session_token = NULL WHERE id = ?', [
+            $userId,
+        ]);
     }
 }
