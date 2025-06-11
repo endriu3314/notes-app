@@ -15,7 +15,7 @@ class Singleton
         throw new \Exception('Cannot unserialize a singleton');
     }
 
-    public static function getInstance(): self
+    public static function getInstance(): static
     {
         $sublcass = static::class;
         if (! isset(self::$instances[$sublcass])) {

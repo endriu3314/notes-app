@@ -3,6 +3,7 @@
 namespace NotesApi;
 
 use NotesApi\Config\EnvLoader;
+use NotesApi\Request\Request;
 
 class Kernel
 {
@@ -20,15 +21,9 @@ class Kernel
 
     public function handle(): void
     {
-        if (file_exists($this->routesFile)) {
-            $kernel = $this;
-            require $this->routesFile;
-        }
-
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-        $response = $this->router->dispatch($method, $uri);
+        $this->router->loadRouteFile($this->routesFile);
+        
+        $response = $this->router->dispatch(Request::getInstance());
 
         echo $response;
     }

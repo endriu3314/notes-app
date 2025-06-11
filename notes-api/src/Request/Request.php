@@ -150,12 +150,16 @@ class Request extends Singleton
 
     public function method(): string
     {
-        return $this->server('REQUEST_METHOD', 'GET');
+        $method = $this->server('REQUEST_METHOD', 'GET');
+        if ($method === 'POST' && $this->post('_method')) {
+            return strtoupper($this->post('_method'));
+        }
+        return $method;
     }
 
     public function uri(): string
     {
-        return $this->server('REQUEST_URI', '/');
+        return parse_url($this->server('REQUEST_URI', '/'), PHP_URL_PATH);
     }
 
     public function isPost(): bool
