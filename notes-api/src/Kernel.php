@@ -22,7 +22,7 @@ class Kernel
     public function handle(): void
     {
         $this->router->loadRouteFile($this->routesFile);
-        
+
         $response = $this->router->dispatch(Request::getInstance());
 
         echo $response;

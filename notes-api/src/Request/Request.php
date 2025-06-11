@@ -154,6 +154,7 @@ class Request extends Singleton
         if ($method === 'POST' && $this->post('_method')) {
             return strtoupper($this->post('_method'));
         }
+
         return $method;
     }
 

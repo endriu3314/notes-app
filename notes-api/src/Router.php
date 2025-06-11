@@ -93,8 +93,6 @@ class Router
             return $this->notFound();
         }
 
-        
-
         $dumpRequestToFile = new DumpRequestToFile;
         $dumpRequestToFile->execute($request);
 
