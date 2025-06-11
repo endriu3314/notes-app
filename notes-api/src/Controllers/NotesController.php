@@ -9,8 +9,6 @@ use NotesApi\Request\Request;
 use NotesApi\Request\ResponseBuilder;
 use NotesApi\TemplateRenderer;
 
-// TODO: Add authorizatrion to paths
-// TODO: Add authorization to the note
 class NotesController
 {
     private readonly NoteRepository $noteRepository;
