@@ -4,6 +4,7 @@ use NotesApi\Controllers\Api\AuthController as ApiAuthController;
 use NotesApi\Controllers\Api\NotesController as ApiNotesController;
 use NotesApi\Controllers\Auth\AuthController;
 use NotesApi\Controllers\NotesController;
+use NotesApi\Controllers\SessionsController;
 use NotesApi\Middleware\ApiAuthMiddleware;
 use NotesApi\Middleware\ApiMiddleware;
 use NotesApi\Middleware\AuthMiddleware;
@@ -87,4 +88,6 @@ $router->group('/app', function (Router $router) {
         $router->post('/{id}/authorize', [NotesController::class, 'authorize']);
         $router->delete('/{id}/unauthorize/{userId}', [NotesController::class, 'unauthorize']);
     });
+
+    $router->get('/sessions', [SessionsController::class, 'index']);
 });
